@@ -9,7 +9,7 @@
 > to another contributor if needed. Thanks to everyone who helped and to those
 > who used my plugin.
 
-A [Nushell](https://www.nushell.sh) plugin that adds a collection of **63**
+A [Nushell](https://www.nushell.sh) plugin that adds a collection of **62**
 cryptographic hash functions from [Hashes](https://github.com/RustCrypto/hashes)
 project.
 
@@ -22,12 +22,14 @@ crate.
 ## Installation
 
 To install this plugin with all algorithms available run
+
 ```nu
 cargo install nu_plugin_hashes
 plugin add ($env.CARGO_HOME ++ /bin/nu_plugin_hashes)
 ```
 
 or on Windows
+
 ```nu
 cargo install nu_plugin_hashes
 plugin add ($env.CARGO_HOME ++ /bin/nu_plugin_hashes.exe)
@@ -42,8 +44,7 @@ Apply hash function.
 ...
 
 Subcommands:
-  hash ascon - Hash a value using the ascon hash algorithm.
-  hash ascon-a - Hash a value using the ascon-a hash algorithm.
+  hash ascon - Hash a value using the Ascon-Hash256 algorithm (see NIST SP 800-232).
   hash belt - Hash a value using the belt hash algorithm.
   hash blake2b-512 - Hash a value using the blake2b-512 hash algorithm.
   hash blake2s-256 - Hash a value using the blake2s-256 hash algorithm.
@@ -56,11 +57,13 @@ Subcommands:
 
 If you only need some algorithms, disable default features and select only
 those you need
+
 ```nu
 cargo install nu_plugin_hashes --no-default-features --features sha2,streebog
 ```
 
 Then check what's installed
+
 ```nu
 ~> help hash
 Apply hash function.
@@ -92,6 +95,10 @@ exceptions are MD5 and SHA-256 as they are already present in Nushell, and
 those algorithms, that don't implement the `Digest` trait or require additional
 arguments for them to be run.
 
+The `hash ascon` command uses **Ascon-Hash256** via the [`ascon-hash`](https://crates.io/crates/ascon-hash)
+crate. Older plugin releases also shipped `hash ascon-a` (Ascon-A); that
+variant was removed upstream in `ascon-hash` 0.4 and is no longer available here.
+
 If you want to import only particular algorithms, build this plugin with those
 features, which names correspond to the crates, that supply the algorithms you
 want. Consult this [table](https://github.com/RustCrypto/hashes?tab=readme-ov-file#supported-algorithms)
@@ -103,8 +110,8 @@ the plugin won't compile.
 ## Implemetation details
 
 All the functions are implemented via generic code that I borrowed from Nushell
-source file [generic_digest.rs](https://github.com/nushell/nushell/blob/0.101.0/crates/nu-command/src/hash/generic_digest.rs). 
-Help page for each command is generated with a [build script](./build.rs). 
+source file [generic_digest.rs](https://github.com/nushell/nushell/blob/0.101.0/crates/nu-command/src/hash/generic_digest.rs).
+Help page for each command is generated with a [build script](./build.rs).
 Hashes of the test text for each example are generated during compilation by
 this script: the test text is fed to each hashing algorithm, and resulting bytes
 are inserted into examples. This approach isdifferent from Nushell's

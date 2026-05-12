@@ -39,16 +39,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "ascon-hash")]
     GeneratedHasherImplMeta {
       crate_name: "ascon_hash",
-      hasher_type_name: "AsconHash",
+      hasher_type_name: "AsconHash256",
       hasher_command: "ascon",
-      hasher: Box::new(ascon_hash::AsconHash::default()),
-    },
-    #[cfg(feature = "ascon-hash")]
-    GeneratedHasherImplMeta {
-      crate_name: "ascon_hash",
-      hasher_type_name: "AsconAHash",
-      hasher_command: "ascon-a",
-      hasher: Box::new(ascon_hash::AsconAHash::default()),
+      hasher: Box::new(ascon_hash::AsconHash256::default()),
     },
     #[cfg(feature = "belt-hash")]
     GeneratedHasherImplMeta {
@@ -368,65 +361,65 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein256::<skein::consts::U32>",
+      hasher_type_name: "Skein256::<skein::U32>",
       hasher_command: "skein256-32",
-      hasher: Box::new(skein::Skein256::<skein::consts::U32>::default()),
+      hasher: Box::new(skein::Skein256::<skein::U32>::default()),
     },
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein256::<skein::consts::U64>",
+      hasher_type_name: "Skein256::<skein::U64>",
       hasher_command: "skein256-64",
-      hasher: Box::new(skein::Skein256::<skein::consts::U64>::default()),
+      hasher: Box::new(skein::Skein256::<skein::U64>::default()),
     },
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein256::<skein::consts::U128>",
+      hasher_type_name: "Skein256::<skein::U128>",
       hasher_command: "skein256-128",
-      hasher: Box::new(skein::Skein256::<skein::consts::U128>::default()),
+      hasher: Box::new(skein::Skein256::<skein::U128>::default()),
     },
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein512::<skein::consts::U32>",
+      hasher_type_name: "Skein512::<skein::U32>",
       hasher_command: "skein512-32",
-      hasher: Box::new(skein::Skein512::<skein::consts::U32>::default()),
+      hasher: Box::new(skein::Skein512::<skein::U32>::default()),
     },
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein512::<skein::consts::U64>",
+      hasher_type_name: "Skein512::<skein::U64>",
       hasher_command: "skein512-64",
-      hasher: Box::new(skein::Skein512::<skein::consts::U64>::default()),
+      hasher: Box::new(skein::Skein512::<skein::U64>::default()),
     },
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein512::<skein::consts::U128>",
+      hasher_type_name: "Skein512::<skein::U128>",
       hasher_command: "skein512-128",
-      hasher: Box::new(skein::Skein512::<skein::consts::U128>::default()),
+      hasher: Box::new(skein::Skein512::<skein::U128>::default()),
     },
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein1024::<skein::consts::U32>",
+      hasher_type_name: "Skein1024::<skein::U32>",
       hasher_command: "skein1024-32",
-      hasher: Box::new(skein::Skein1024::<skein::consts::U32>::default()),
+      hasher: Box::new(skein::Skein1024::<skein::U32>::default()),
     },
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein1024::<skein::consts::U64>",
+      hasher_type_name: "Skein1024::<skein::U64>",
       hasher_command: "skein1024-64",
-      hasher: Box::new(skein::Skein1024::<skein::consts::U64>::default()),
+      hasher: Box::new(skein::Skein1024::<skein::U64>::default()),
     },
     #[cfg(feature = "skein")]
     GeneratedHasherImplMeta {
       crate_name: "skein",
-      hasher_type_name: "Skein1024::<skein::consts::U128>",
+      hasher_type_name: "Skein1024::<skein::U128>",
       hasher_command: "skein1024-128",
-      hasher: Box::new(skein::Skein1024::<skein::consts::U128>::default()),
+      hasher: Box::new(skein::Skein1024::<skein::U128>::default()),
     },
     #[cfg(feature = "sm3")]
     GeneratedHasherImplMeta {

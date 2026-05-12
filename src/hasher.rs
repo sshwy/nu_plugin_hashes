@@ -4,9 +4,9 @@
 //! https://github.com/nushell/nushell/blob/0.101.0/crates/nu-command/src/hash/generic_digest.rs
 //! The *hash* module is private, so I had no choice.
 
-use std::{io::Write, marker::PhantomData, ops::Not};
+use std::{convert::AsRef, io::Write, marker::PhantomData, ops::Not};
 
-use digest::{Digest, Output};
+use digest::Digest;
 use nu_cmd_base::input_handler::{operate, CmdArgument};
 use nu_plugin::{EngineInterface, EvaluatedCall, PluginCommand};
 use nu_protocol::{
@@ -25,6 +25,29 @@ use nu_protocol::{
 };
 
 use crate::HashesPlugin;
+
+fn bytes_to_hex_lower(bytes: &[u8]) -> String {
+  use core::fmt::Write;
+  let mut s = String::with_capacity(bytes.len() * 2);
+  for b in bytes {
+    let _ = write!(s, "{b:02x}");
+  }
+  s
+}
+
+/// Adapts a [`Digest`] hasher for [`Write`], since digest 0.11 no longer implements `io::Write`.
+struct DigestWriter<'a, D: Digest>(&'a mut D);
+
+impl<D: Digest> Write for DigestWriter<'_, D> {
+  fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+    self.0.update(buf);
+    Ok(buf.len())
+  }
+
+  fn flush(&mut self) -> std::io::Result<()> {
+    Ok(())
+  }
+}
 
 pub trait Hasher: Digest + Clone {
   fn name() -> &'static str;
@@ -64,8 +87,7 @@ impl CmdArgument for Arguments {
 
 impl<H> PluginCommand for GenericHasher<H>
 where
-  H: Hasher + Write + Send + Sync + 'static,
-  Output<H>: core::fmt::LowerHex,
+  H: Hasher + Send + Sync + 'static,
 {
   type Plugin = HashesPlugin;
 
@@ -117,12 +139,17 @@ where
 
     if let PipelineData::ByteStream(stream, ..) = input {
       let mut hasher = H::new();
-      stream.write_to(&mut hasher)?;
+      stream.write_to(&mut DigestWriter(&mut hasher))?;
       let digest = hasher.finalize();
       if binary {
-        Ok(Value::binary(digest.to_vec(), head).into_pipeline_data())
+        Ok(
+          Value::binary(AsRef::<[u8]>::as_ref(&digest).to_vec(), head).into_pipeline_data(),
+        )
       } else {
-        Ok(Value::string(format!("{digest:x}"), head).into_pipeline_data())
+        Ok(
+          Value::string(bytes_to_hex_lower(AsRef::<[u8]>::as_ref(&digest)), head)
+            .into_pipeline_data(),
+        )
       }
     } else {
       operate(
@@ -140,7 +167,6 @@ where
 fn action<H>(input: &Value, args: &Arguments, _span: Span) -> Value
 where
   H: Hasher,
-  Output<H>: core::fmt::LowerHex,
 {
   let span = input.span();
   let (bytes, span) = match input {
@@ -166,8 +192,8 @@ where
   let digest = H::digest(bytes);
 
   if args.binary {
-    Value::binary(digest.to_vec(), span)
+    Value::binary(AsRef::<[u8]>::as_ref(&digest).to_vec(), span)
   } else {
-    Value::string(format!("{digest:x}"), span)
+    Value::string(bytes_to_hex_lower(AsRef::<[u8]>::as_ref(&digest)), span)
   }
 }
